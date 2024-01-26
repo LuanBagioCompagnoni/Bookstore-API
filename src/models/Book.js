@@ -1,3 +1,4 @@
+
 import mongoose from 'mongoose';
 
 const bookSchema = new mongoose.Schema({
@@ -9,5 +10,3 @@ const bookSchema = new mongoose.Schema({
 }, { versionKey: false });
 
 const book = mongoose.model('book', bookSchema);
-
-export default book;
