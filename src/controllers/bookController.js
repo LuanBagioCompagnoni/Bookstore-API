@@ -51,6 +51,16 @@ class BookController {
       next(error);
     }
   }
+
+  static async filterBook(req, res, next){
+    try {
+      const filter = req.query;
+      res.status(200).send(filter);
+    } catch (error) {
+      next(error);
+    }
+  }
+
 }
 
 export default BookController;
