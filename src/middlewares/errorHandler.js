@@ -13,8 +13,9 @@ function handleError(error, req, res, next){
     new ValidationError(error).sendResponse(res);
   }else if(error instanceof InternalNotFoundError){
     new InternalNotFoundError().sendResponse(res);
-  }
-  else{
+  }else if(error instanceof InvalidRequestError){
+    new InvalidRequestError().sendResponse(res);
+  }else{
     new BaseError().sendResponse(res);
   }
 }

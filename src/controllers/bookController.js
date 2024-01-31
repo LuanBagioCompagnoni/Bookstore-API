@@ -1,4 +1,5 @@
 import InternalNotFoundError from '../errors/InternalNotFoundError.js';
+import { author } from '../models/Author.js';
 import book from '../models/Book.js';
 import ResponseMessage from '../models/Response.js';
 
@@ -54,17 +55,41 @@ class BookController {
 
   static async filterBook(req, res, next){
     try {
-      const field = req.headers.field;
-      const value = req.headers.value;
-      const filter = {};
-      filter[field] = value;
-      const filteredBook = await book.find(filter);
-      res.status(200).send(new ResponseMessage(200, filteredBook));
+      const filter = await processFilter(req.query);
+      
+      if(filter !== null) {
+        const foundBooks = await book.find(filter).populate('author');
+        res.status(200).json(new ResponseMessage(200, foundBooks));
+      }else{
+        res.status(200).json(new ResponseMessage(200, []));
+      }
     } catch (error) {
       next(error);
     }
   }
 
+}
+
+async function processFilter(params) {
+  const {editor, title, minPages, maxPages, authorName} = params;
+
+  let filter= {};
+
+  if(editor) filter.editor = editor;
+  if(title) filter.title = {$regex: title, $options: 'i'};
+
+  if(minPages || maxPages) filter.pages = {};
+  if(minPages) filter.pages.$gte = minPages;
+  if(maxPages) filter.pages.$lte = maxPages;
+
+  if(authorName){
+    const foundAuthor = await author.findOne({ name: authorName });
+
+    if(foundAuthor !== null) filter.author = foundAuthor._id;
+    else filter = null;
+  }
+  
+  return filter;
 }
 
 export default BookController;
