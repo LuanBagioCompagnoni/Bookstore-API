@@ -3,6 +3,7 @@ import BookController from '../controllers/bookController.js';
 
 const routes = express.Router();
 
+routes.get('/books/filter', await BookController.filterBook);
 routes.get('/books', await BookController.listBooks);
 routes.get('/books/:id', await BookController.findBookById);
 routes.post('/books', await BookController.createBook);
