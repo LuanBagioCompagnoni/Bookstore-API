@@ -54,8 +54,12 @@ class BookController {
 
   static async filterBook(req, res, next){
     try {
-      const filter = req.query;
-      res.status(200).send(filter);
+      const field = req.headers.field;
+      const value = req.headers.value;
+      const filter = {};
+      filter[field] = value;
+      const filteredBook = await book.find(filter);
+      res.status(200).send(new ResponseMessage(200, filteredBook));
     } catch (error) {
       next(error);
     }
