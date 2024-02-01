@@ -8,13 +8,16 @@ class BookController {
 
   static async listBooks(req, res, next){
     try {
-      let { limit = 5, page = 1 } = req.query;
+      let { limit = 5, page = 1, ordenation = '_id:-1'} = req.query;
+
+      const [shortField, order] = ordenation.split(':');
 
       limit = parseInt(limit);
       page = parseInt(page);
 
       if(limit > 0 && page > 0){
         const document = await book.find()
+          .sort({ [shortField]: order})
           .skip((page - 1) * limit)
           .limit(limit)
           .populate('author')
