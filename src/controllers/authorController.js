@@ -6,8 +6,9 @@ class AuthorController {
 
   static async listAuthors(req, res, next){
     try {
-      const document = await author.find({});
-      res.status(200).send(new ResponseMessage(true, document));
+      const document = author.find({});
+      req.result = document;
+      next();
     } catch (error) {
       next(error);
     }

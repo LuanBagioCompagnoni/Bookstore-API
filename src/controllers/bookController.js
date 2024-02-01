@@ -1,5 +1,4 @@
 import InternalNotFoundError from '../errors/InternalNotFoundError.js';
-import InvalidRequestError from '../errors/InvalidRequestError.js';
 import { author } from '../models/Author.js';
 import book from '../models/Book.js';
 import ResponseMessage from '../models/Response.js';
@@ -8,27 +7,11 @@ class BookController {
 
   static async listBooks(req, res, next){
     try {
-      let { limit = 5, page = 1, ordenation = '_id:-1'} = req.query;
+      const foundBooks = book.find();
 
-      let [shortField, order] = ordenation.split(':');
+      req.result = foundBooks;
 
-      limit = parseInt(limit);
-      page = parseInt(page);
-      order = parseInt(order);
-
-      if(limit > 0 && page > 0){
-        const document = await book.find()
-          .sort({ [shortField]: order})
-          .skip((page - 1) * limit)
-          .limit(limit)
-          .populate('author')
-          .exec();
-        
-        res.status(200).send(new ResponseMessage(true, document));
-      }else{
-        next(new InvalidRequestError());
-      }
-
+      next();
     } catch (error) {
       next(error);
     }
@@ -78,8 +61,9 @@ class BookController {
       const filter = await processFilter(req.query);
       
       if(filter !== null) {
-        const foundBooks = await book.find(filter).populate('author');
-        res.status(200).json(new ResponseMessage(200, foundBooks));
+        const foundBooks = book.find(filter).populate('author');
+        req.result = foundBooks;
+        next();
       }else{
         res.status(200).json(new ResponseMessage(200, []));
       }
