@@ -1,4 +1,5 @@
 import InternalNotFoundError from '../errors/InternalNotFoundError.js';
+import InvalidRequestError from '../errors/InvalidRequestError.js';
 import { author } from '../models/Author.js';
 import book from '../models/Book.js';
 import ResponseMessage from '../models/Response.js';
@@ -7,8 +8,23 @@ class BookController {
 
   static async listBooks(req, res, next){
     try {
-      const document = await book.find({});
-      res.status(200).send(new ResponseMessage(true, document));
+      let { limit = 5, page = 1 } = req.query;
+
+      limit = parseInt(limit);
+      page = parseInt(page);
+
+      if(limit > 0 && page > 0){
+        const document = await book.find()
+          .skip((page - 1) * limit)
+          .limit(limit)
+          .populate('author')
+          .exec();
+        
+        res.status(200).send(new ResponseMessage(true, document));
+      }else{
+        next(new InvalidRequestError());
+      }
+
     } catch (error) {
       next(error);
     }
