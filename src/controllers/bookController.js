@@ -10,10 +10,11 @@ class BookController {
     try {
       let { limit = 5, page = 1, ordenation = '_id:-1'} = req.query;
 
-      const [shortField, order] = ordenation.split(':');
+      let [shortField, order] = ordenation.split(':');
 
       limit = parseInt(limit);
       page = parseInt(page);
+      order = parseInt(order);
 
       if(limit > 0 && page > 0){
         const document = await book.find()
