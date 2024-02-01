@@ -19,8 +19,8 @@
 
 ---
 
-### Next step:
+## Next step:
 
-# publish application to AWS
+### publish application to AWS
 
 - AWS documentation will be here...
