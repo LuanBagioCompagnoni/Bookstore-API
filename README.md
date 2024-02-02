@@ -21,6 +21,7 @@
 
 ## Next step:
 
-### publish application to AWS
+### Publish application to AWS
 
-- AWS documentation will be here...
+- Pubished in AWS, and listening in this path: http://18.205.235.204:3000/
+- Used AWS Lightsail
