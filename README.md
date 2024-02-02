@@ -19,9 +19,7 @@
 
 ---
 
-## Next step:
-
 ### Publish application to AWS
 
-- Pubished in AWS, and listening in this path: http://18.205.235.204:3000/
+- Pubished in AWS, only experimentally, not listening now
 - Used AWS Lightsail
